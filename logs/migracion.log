@@ -1,0 +1,71 @@
+[INFO] Conectando a Oracle...
+[INFO] Conectando a PostgreSQL...
+[INFO] Obteniendo tablas de Oracle...
+[INFO] ✅ Tabla estado_civil migrada correctamente.
+[INFO] ✅ Tabla usuarios migrada correctamente.
+[INFO] ✅ ora2pg ejecutado exitosamente dentro del contenedor.
+[INFO] 🧠 Tablas detectadas en PostgreSQL:
+[INFO]  - ESTADO_CIVIL → prueba.estado_civil
+[INFO]  - USUARIOS → prueba.usuarios
+[INFO] ✔ Referencia corregida: ESTADO_CIVIL → prueba.estado_civil
+[INFO] ✔ Referencia corregida: USUARIOS → prueba.usuarios
+[ERROR] ❌ Error al ejecutar el SQL en PostgreSQL:
+[ERROR] syntax error at or near "."
+LINE 16:   e.DESCRIPCION AS prueba.estado_civil,
+                                  ^
+
+[INFO] 🧹 Archivo vistas.sql eliminado.
+[INFO] 🧹 Archivos CSV eliminados.
+[INFO] Conectando a Oracle...
+[INFO] Conectando a PostgreSQL...
+[INFO] Obteniendo tablas de Oracle...
+[INFO] ✅ Tabla estado_civil migrada correctamente.
+[INFO] ✅ Tabla usuarios migrada correctamente.
+[INFO] ✅ ora2pg ejecutado exitosamente dentro del contenedor.
+[INFO] 🧠 Tablas detectadas en PostgreSQL:
+[INFO]  - ESTADO_CIVIL → prueba.estado_civil
+[INFO]  - USUARIOS → prueba.usuarios
+[INFO] ✔ Referencia corregida: USUARIOS → prueba.usuarios
+[INFO] ✔ Referencia corregida: ESTADO_CIVIL → prueba.estado_civil
+[INFO] ✔ Referencia corregida: USUARIOS → prueba.usuarios
+[INFO] ✔ Referencia corregida: USUARIOS → prueba.usuarios
+[INFO] ✔ Referencia corregida: ESTADO_CIVIL → prueba.estado_civil
+[INFO] ✔ Referencia corregida: USUARIOS → prueba.usuarios
+[INFO] ✔ Referencia corregida: ESTADO_CIVIL → prueba.estado_civil
+[INFO] ✅ Vistas creadas exitosamente en PostgreSQL.
+[INFO] 🧹 Archivo vistas.sql eliminado.
+[INFO] 🧹 Archivos CSV eliminados.
+[INFO] Conectando a Oracle...
+[INFO] Conectando a PostgreSQL...
+[INFO] Obteniendo tablas de Oracle...
+[INFO] ✅ Tabla estado_civil migrada correctamente.
+[INFO] ✅ Tabla usuarios migrada correctamente.
+[INFO] ✅ ora2pg ejecutado exitosamente dentro del contenedor.
+[INFO] 🧠 Tablas detectadas en PostgreSQL:
+[INFO]  - ESTADO_CIVIL → prueba.estado_civil
+[INFO]  - USUARIOS → prueba.usuarios
+[INFO] ✔ Referencia corregida: USUARIOS → prueba.usuarios
+[INFO] ✔ Referencia corregida: ESTADO_CIVIL → prueba.estado_civil
+[INFO] ✔ Referencia corregida: USUARIOS → prueba.usuarios
+[INFO] ✔ Referencia corregida: USUARIOS → prueba.usuarios
+[INFO] ✔ Referencia corregida: ESTADO_CIVIL → prueba.estado_civil
+[INFO] ✔ Referencia corregida: USUARIOS → prueba.usuarios
+[INFO] ✔ Referencia corregida: USUARIOS → prueba.usuarios
+[INFO] ✔ Referencia corregida: ESTADO_CIVIL → prueba.estado_civil
+[INFO] ✔ Referencia corregida: USUARIOS → prueba.usuarios
+[INFO] ✔ Referencia corregida: USUARIOS → prueba.usuarios
+[INFO] ✔ Referencia corregida: ESTADO_CIVIL → prueba.estado_civil
+[INFO] ✔ Referencia corregida: USUARIOS → prueba.usuarios
+[WARNING] ⚠️ Referencia a tabla desconocida: FECHA_REGISTRO
+[WARNING] ⚠️ Referencia a tabla desconocida: FECHA_REGISTRO
+[INFO] ✔ Referencia corregida: USUARIOS → prueba.usuarios
+[WARNING] ⚠️ Referencia a tabla desconocida: FECHA_REGISTRO
+[WARNING] ⚠️ Referencia a tabla desconocida: FECHA_REGISTRO
+[ERROR] ❌ Error al ejecutar el SQL en PostgreSQL:
+[ERROR] function to_char(text, unknown) does not exist
+LINE 64:   TO_CHAR(u.FECHA_REGISTRO, 'DD/MM/YYYY') AS FECHA_REGISTRO,
+           ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+
+[INFO] 🧹 Archivo vistas.sql eliminado.
+[INFO] 🧹 Archivos CSV eliminados.

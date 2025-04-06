@@ -1,0 +1,18 @@
+{
+  "oracle": {
+    "host": "192.168.56.50",
+    "port": "1521",
+    "sid": "XEPDB1",
+    "user": "system",
+    "password": "oracle"
+  },
+  "postgresql": {
+    "host": "192.168.56.20",
+    "port": "5432",
+    "database": "XEPDB1",
+    "user": "admin",
+    "password": "admin"
+  },
+  "schema": "PRUEBA"
+}
+
