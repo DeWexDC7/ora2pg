@@ -1,11 +1,13 @@
 import json
 import os
 import logging
+from logging.handlers import RotatingFileHandler
 import psycopg2
 import oracledb
 
 CONFIG_JSON = "configuracion/conexion.json"
 BANDERA_FILE = "bandera_migracion_exitosa.txt"
+LOG_FILE = "logs/migracion_vistas.log"
 
 VISTAS_OBJETIVO = [
     'ACTIVIDADES_CALLCENTER', 'SOLICITUDES_CALLCENTER', 'AVANCE_MANT_RHELEC', 'AVANCE_MANT_RHELEC_DET',
@@ -15,7 +17,26 @@ VISTAS_OBJETIVO = [
     'FAC_MP_MANO_OBRA_DETALLE', 'FAC_MP_MANO_OBRA', 'UT', 'ELEMENTOS', 'SISTEMAS'
 ]
 
-logging.basicConfig(level=logging.INFO, format='[%(levelname)s] %(message)s')
+# Crear directorio de logs si no existe
+os.makedirs(os.path.dirname(LOG_FILE), exist_ok=True)
+
+# Configuración de logging
+logger = logging.getLogger('migrar_vistas')
+logger.setLevel(logging.INFO)
+
+# Formato de log detallado
+log_format = logging.Formatter('[%(asctime)s] [%(process)d] [%(levelname)s] %(message)s', 
+                               datefmt='%Y-%m-%d %H:%M:%S')
+
+# Handler para consola
+console_handler = logging.StreamHandler()
+console_handler.setFormatter(log_format)
+logger.addHandler(console_handler)
+
+# Handler para archivo con rotación (10MB, máximo 5 archivos)
+file_handler = RotatingFileHandler(LOG_FILE, maxBytes=10*1024*1024, backupCount=5)
+file_handler.setFormatter(log_format)
+logger.addHandler(file_handler)
 
 # Cargar configuración
 with open(CONFIG_JSON) as f:
@@ -36,9 +57,9 @@ def crear_esquema_postgres():
         conn_pg.commit()
         cursor_pg.close()
         conn_pg.close()
-        logging.info(f"📁 Esquema '{schema}' verificado/creado en PostgreSQL.")
+        logger.info(f"📁 Esquema '{schema}' verificado/creado en PostgreSQL.")
     except Exception as e:
-        logging.error(f"❌ Error al crear el esquema '{schema}' en PostgreSQL: {e}")
+        logger.error(f"❌ Error al crear el esquema '{schema}' en PostgreSQL: {e}")
         raise
 
 def vistas_existentes_postgres():
@@ -54,8 +75,8 @@ def vistas_existentes_postgres():
         conn.close()
         return existentes
     except Exception as e:
-        logging.error("❌ Error al consultar vistas existentes en PostgreSQL:")
-        logging.error(e)
+        logger.error("❌ Error al consultar vistas existentes en PostgreSQL:")
+        logger.error(e)
         return []
 
 def obtener_vistas_oracle():
@@ -74,7 +95,7 @@ def obtener_vistas_oracle():
         conn.close()
         return dict((name, text) for name, text in vistas)
     except Exception as e:
-        logging.error(f"❌ Error al obtener vistas desde Oracle: {e}")
+        logger.error(f"❌ Error al obtener vistas desde Oracle: {e}")
         return {}
 
 def limpiar_definicion(texto):
@@ -91,12 +112,12 @@ def migrar_vistas():
 
         for vista in VISTAS_OBJETIVO:
             if vista in existentes_pg:
-                logging.info(f"✅ Vista {vista} ya existe en PostgreSQL. Saltando.")
+                logger.info(f"✅ Vista {vista} ya existe en PostgreSQL. Saltando.")
                 continue
 
             if vista not in vistas_oracle:
                 vistas_migradas = False
-                logging.error(f"❌ Vista {vista} no encontrada en Oracle.")
+                logger.error(f"❌ Vista {vista} no encontrada en Oracle.")
                 continue
 
             try:
@@ -104,26 +125,26 @@ def migrar_vistas():
                 sql_create = f"CREATE OR REPLACE VIEW {schema}.{vista.lower()} AS {definicion}"
                 cursor_pg.execute(sql_create)
                 conn_pg.commit()
-                logging.info(f"✅ Vista {vista} creada correctamente.")
+                logger.info(f"✅ Vista {vista} creada correctamente.")
             except Exception as e:
                 vistas_migradas = False
-                logging.error(f"❌ Error al crear vista {vista}: {e}")
+                logger.error(f"❌ Error al crear vista {vista}: {e}")
 
         cursor_pg.close()
         conn_pg.close()
 
     except Exception as e:
         vistas_migradas = False
-        logging.error("❌ Error general en la migración de vistas:")
-        logging.error(e)
+        logger.error("❌ Error general en la migración de vistas:")
+        logger.error(e)
 
     with open(BANDERA_FILE, "w") as f:
         f.write("true" if vistas_migradas else "false")
 
     if vistas_migradas:
-        logging.info("🎉 Todas las vistas fueron creadas o ya existían.")
+        logger.info("🎉 Todas las vistas fueron creadas o ya existían.")
     else:
-        logging.warning("⚠️ Algunas vistas no fueron creadas. Revisar errores arriba.")
+        logger.warning("⚠️ Algunas vistas no fueron creadas. Revisar errores arriba.")
 
 def main():
     crear_esquema_postgres()
